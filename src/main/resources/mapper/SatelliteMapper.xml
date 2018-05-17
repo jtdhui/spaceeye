@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+       	<mapper namespace="com.spaceeye.dao.ISatelliteDao" >
+    	    <resultMap id="BaseResultMap" type="com.spaceeye.dto.Satellite">
+   	            <result column="satellite_id" property="satelliteId" jdbcType="INTEGER" />
+                <result column="satellite_name" property="satelliteName" jdbcType="VARCHAR" />
+                <result column="detail" property="detail" jdbcType="VARCHAR" />
+                <result column="app_detail" property="appDetail" jdbcType="VARCHAR" />
+                <result column="editor_time" property="editorTime" jdbcType="TIMESTAMP" />
+   	        </resultMap>
+
+       <sql id="Base_Column_List">
+          satellite_id,satellite_name,detail,app_detail,editor_time
+        </sql>
+      <select id="findSatelliteList" parameterType="com.spaceeye.dto.Satellite" resultMap="BaseResultMap">
+            select * from satellite u where 1=1
+             <if test="satelliteName != null and satelliteName != ''">
+                 satellite_name = #{satelliteName}
+             </if>           
+      </select>
+      
+       <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+            select * from satellite u where satellite_id = #{satelliteId}                
+      </select>
+      
+      <insert id="saveSatellite" parameterType="com.spaceeye.dto.Satellite">
+		INSERT INTO satellite(satellite_id,satellite_name,detail,app_detail)
+		VALUES(#{satelliteId},#{satelliteName},#{detail},#{appDetail})
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="com.spaceeye.dto.Satellite">
+		UPDATE satellite
+	<trim prefix="set" suffixOverrides=",">    
+       <if test="satelliteId!=null and satelliteId!='' ">  
+          satellite_id = #{satelliteId},  
+       </if>  
+  
+      <if test="satelliteName!=null and satelliteName!='' ">  
+         satellite_name = #{satelliteName},  
+       </if> 
+       
+       <if test="editorTime!=null">  
+            editor_time = #{editorTime,jdbcType=TIMESTAMP},  
+       </if> 
+       
+       <if test="detail!=null and detail!='' ">  
+         detail = #{detail},  
+       </if> 
+       
+        <if test="appDetail!=null and appDetail!='' ">  
+         app_detail = #{appDetail},  
+       </if>     
+     </trim> 
+        where satellite_id = #{satelliteId}
+	</update>
+	
+	   <select id="findSatelliteLikeBhao" parameterType="string" resultMap="BaseResultMap">
+	          select  
+	              <include refid="Base_Column_List" /> 
+	          from 
+	              satellite  
+	           where 1=1
+	            <if test ="_parameter!= null">
+                    and satellite_id like '%${_parameter}%'
+                </if> 
+                limit 0,4
+	   </select>
+	   
+	   <!-- 查询资讯记录总数 -->
+    <select id="selectCount" resultType="int">
+        select count(*) from satellite
+    </select>
+    
+     <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from satellite where 1=1
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+    
+        <!-- 清空表数据 -->
+       <update id="truncateTable">
+          truncate table satellite
+     </update>
+     
+     <select id="findSatelliteIds" resultType="string">
+            select satellite_id from satellite              
+      </select>
+    
+	
+  </mapper>

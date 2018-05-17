@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+       	<mapper namespace="com.spaceeye.dao.IUserDao" >
+    	    <resultMap id="BaseResultMap" type="com.spaceeye.dto.User">
+   	            <result column="user_id" property="userId" jdbcType="INTEGER" />
+                <result column="user_name" property="userName" jdbcType="VARCHAR" />
+                <result column="password" property="password" jdbcType="VARCHAR" />
+   	        </resultMap>
+
+       <sql id="Base_Column_List">
+          user_id,user_name,password
+        </sql>
+      <select id="findUser" parameterType="com.spaceeye.dto.User" resultMap="BaseResultMap">
+            select * from user u where u.user_name=#{userName} and u.password=#{password}
+      </select>
+  </mapper>

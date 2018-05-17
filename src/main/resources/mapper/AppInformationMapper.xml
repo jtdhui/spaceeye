@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+       	<mapper namespace="com.spaceeye.dao.IAppInformationDao" >
+    	    <resultMap id="BaseResultMap" type="com.spaceeye.dto.AppInformation">
+   	            <result column="information_id" property="appInformationId" jdbcType="INTEGER" />
+                <result column="help_center" property="helpCenter" jdbcType="VARCHAR" />
+                <result column="contact_us" property="contactUs" jdbcType="VARCHAR" />
+                <result column="imprint" property="imprint" jdbcType="VARCHAR" />
+   	        </resultMap>
+
+       <sql id="Base_Column_List">
+          information_id, help_center,contact_us,imprint
+        </sql>
+
+       <insert id="insertAppInformation" parameterType="com.spaceeye.dto.AppInformation">
+		INSERT INTO app_information(information_id,help_center,contact_us,imprint)
+		VALUES(#{appInformationId},#{helpCenter},#{contactUs},#{imprint})
+	</insert>
+	
+	 <select id="findAppInformation" resultMap="BaseResultMap">
+		select * from app_information
+	</select>
+	
+
+	
+	<update id="updateAppInformation" parameterType="com.spaceeye.dto.AppInformation">
+		UPDATE app_information
+	<trim prefix="set" suffixOverrides=",">    
+       <if test="appInformationId!=null and appInformationId!='' ">  
+          information_id= #{appInformationId},  
+       </if>  
+  
+      <if test="helpCenter!=null and helpCenter!='' ">  
+         help_center = #{helpCenter},  
+       </if> 
+       
+        <if test="contactUs!=null and contactUs!='' ">  
+         contact_us = #{contactUs},  
+       </if>  
+       
+        <if test="imprint!=null and imprint!='' ">  
+         imprint = #{imprint},  
+       </if>   
+     </trim> 
+        where information_id = #{appInformationId}
+	</update>
+  </mapper>

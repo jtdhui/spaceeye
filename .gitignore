@@ -1,0 +1,13 @@
+/.idea
+.idea/
+/test
+/target
+*.iml
+*.class
+/spaceeye/target/
+.settings/
+.project
+.mymetadata
+/bin/
+out/
+.idea/workspace.xml

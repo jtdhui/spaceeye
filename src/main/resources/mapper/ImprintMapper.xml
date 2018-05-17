@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+       	<mapper namespace="com.spaceeye.dao.IImprintDao" >
+    	    <resultMap id="BaseResultMap" type="com.spaceeye.dto.Imprint">
+   	            <result column="imprint_id" property="imprintId" jdbcType="INTEGER" />
+                <result column="content" property="content" jdbcType="VARCHAR" />
+   	        </resultMap>
+
+       <sql id="Base_Column_List">
+          imprint_id,content
+        </sql>
+
+       <insert id="insertImprint" parameterType="com.spaceeye.dto.Imprint">
+		INSERT INTO imprint(imprint_id,content)
+		VALUES(#{imprintId},#{content})
+	</insert>
+	
+	 <select id="findImprint" resultMap="BaseResultMap">
+		select * from imprint
+	</select>
+	
+	<update id="updateImprint" parameterType="com.spaceeye.dto.Imprint">
+		UPDATE imprint
+	<trim prefix="set" suffixOverrides=",">    
+       <if test="imprintId!=null and imprintId!='' ">  
+          imprint_id= #{imprintId},  
+       </if>  
+  
+      <if test="content!=null and content!='' ">  
+         content = #{content},  
+       </if> 
+     </trim> 
+        where imprint_id = #{imprintId}
+	</update>
+  </mapper>

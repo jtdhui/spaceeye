@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+       	<mapper namespace="com.spaceeye.dao.IArticleDao" >
+    	    <resultMap id="BaseResultMap" type="com.spaceeye.dto.Article">
+   	            <result column="article_id" property="articleId" jdbcType="INTEGER" />
+                <result column="title" property="title" jdbcType="VARCHAR" />
+                <result column="content" property="content" jdbcType="VARCHAR" />  
+                <result column="app_content" property="appContent" jdbcType="VARCHAR" />              
+                <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP" />
+                <result column="status" property="status" jdbcType="SMALLINT" />
+                <result column="category_id" property="categoryId" jdbcType="VARCHAR" />
+                <result column="satellite_bhao" property="satelliteBhao" jdbcType="VARCHAR" />
+                <result column="reprint" property="reprint" jdbcType="VARCHAR" />               
+   	        </resultMap>
+
+       <sql id="Base_Column_List">
+          article_id,title,content,app_content,publish_time,status,category_id,reprint
+        </sql>
+
+       <insert id="saveArticle" parameterType="com.spaceeye.dto.Article">
+		INSERT INTO article(article_id,title,content,app_content,publish_time,status,category_id,satellite_bhao,reprint)
+		VALUES(#{articleId},#{title},#{content},#{appContent},#{publishTime},#{status},#{categoryId},#{satelliteBhao},#{reprint})
+	</insert>
+	
+	 <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from article where 1=1
+         <if test="title!=null and title!=''">
+              and title like '%${title}%'
+        </if>
+         <if test="satelliteBhao!=null and satelliteBhao!=''">
+              and satellite_bhao = #{satelliteBhao}
+        </if>
+          <if test="categoryId!=null and categoryId!=''">
+             and category_id  like '%${categoryId}%'           
+        </if>
+        or reprint = '1' 
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
+	
+	<!-- 查询资讯记录总数 -->
+    <select id="selectCount" resultType="int">
+        select count(*) from article where 1=1
+                 <if test="title!=null and title!=''">
+              and title like '%${title}%'
+        </if>
+         <if test="satelliteBhao!=null and satelliteBhao!=''">
+              and satellite_bhao = #{satelliteBhao}
+        </if>
+          <if test="categoryId!=null and categoryId!=''">
+             and category_id  like '%${categoryId}%'           
+        </if>
+         or reprint = '1' 
+    </select>
+    
+    <!-- 按编号查询所有文章 -->
+    <select id="findSatelliteByBhao" parameterType="string" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List" /> from article where 1=1
+         <if test ="_parameter!= null">
+              and satellite_bhao = #{_parameter}
+        </if>
+    </select>
+    
+   <!-- 根据id查询 -->
+    <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+        select 
+             <include refid="Base_Column_List" /> 
+         from 
+             article 
+         where 
+             article_id = #{articleId}
+    </select>
+    
+     <delete id="deleteByPrimaryKey" parameterType="int">
+		  DELETE FROM article WHERE article_id = #{articleId}
+	</delete>
+	
+	<update id="updateByPrimaryKey" parameterType="com.spaceeye.dto.Article">
+		UPDATE article
+	<trim prefix="set" suffixOverrides=",">    
+       <if test="articleId!=null and articleId!='' ">  
+          article_id = #{articleId},  
+       </if>  
+  
+      <if test="title!=null and title!='' ">  
+         title = #{title},  
+       </if> 
+       
+       <if test="content!=null and content!='' ">  
+         content = #{content},  
+       </if> 
+       
+        <if test="appContent!=null and appContent!='' ">  
+         app_content = #{appContent},  
+       </if> 
+       
+        <if test="publishTime!=null">  
+         publish_time = #{publishTime},  
+       </if>  
+       
+        <if test="status!=null and status!='' ">  
+         status = #{status},  
+       </if>  
+       
+        <if test="categoryId!=null and categoryId!='' ">  
+        category_id = #{categoryId},  
+       </if>  
+       
+       <if test="satelliteBhao!=null and satelliteBhao!='' ">  
+        satellite_bhao = #{satelliteBhao},  
+       </if> 
+       
+        <if test="reprint!=null and reprint!='' ">  
+        reprint = #{reprint},  
+       </if>                 
+     </trim> 
+        where article_id = #{articleId}
+	</update>
+  </mapper>
